@@ -70,6 +70,28 @@
         </template>
         <h4 x-show="!$store.cart.items.length" style="margin-top: 1rem;">Cart is Empty</h4>
         <h4 x-show="$store.cart.items.length">Total: <span x-text="rupiah($store.cart.total)"></span></h4>
+
+        <div class="form-container" x-show="$store.cart.items.length">
+          <form action="" id="checkoutForm">
+            <h5>Customer Detail</h5>
+            <label for="name">
+              <span>Name</span>
+              <input type="text" id="name" name="name"/>
+            </label>
+
+            <label for="email">
+              <span>Email</span>
+              <input type="email" id="email" name="email"/>
+            </label>
+
+            <label for="phone">
+              <span>Phone</span>
+              <input type="number" id="phone" name="phone" autocomplete="off"/>
+            </label>
+
+            <button type="submit" class="checkout-button" id="checkout-button">Checkout</button>
+          </form>
+        </div>
       </div>
       <!-- Shopping Cart end -->
 
