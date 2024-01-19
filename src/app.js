@@ -15,10 +15,45 @@ document.addEventListener('alpine:init', () => {
     quantity: 0,
 
     add(newItem) {
-      this.items.push(newItem);
-      this.quantity++;
-      this.total += newItem.price;
-      console.log(this.total);
+      const cartItem = this.items.find(p => p.id === newItem.id);
+      if (!cartItem) {
+        this.items.push({...newItem, quantity: 1, total: newItem.price});
+        this.quantity++;
+        this.total += newItem.price;
+      } else {
+        this.items = this.items.map(p => {
+          if (p.id !== newItem.id) {
+            return p;
+          } else {
+            p.quantity++;
+            p.total = p.price * p.quantity;
+            this.quantity++;
+            this.total += p.price;
+            return p;
+          }
+        });
+      }
+    },
+
+    remove(id) {
+      const cartItem = this.items.find(p => p.id === id);
+      if (cartItem.quantity > 1) {
+        this.items = this.items.map(p => {
+          if (p.id !== id) {
+            return p;
+          } else {
+            p.quantity--;
+            p.total = p.price * p.quantity;
+            this.quantity--;
+            this.total -= p.price;
+            return p;
+          }
+        });
+      } else if (cartItem.quantity === 1) {
+        this.items = this.items.filter(p => p.id !== id);
+        this.quantity--;
+        this.total -= cartItem.price;
+      }
     }
   });
 });
