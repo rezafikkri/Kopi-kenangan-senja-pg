@@ -85,13 +85,43 @@ form.addEventListener('keyup', () => {
 });
 
 // checkout
-checkoutButton.addEventListener('click', (e) => {
+checkoutButton.addEventListener('click', async (e) => {
   e.preventDefault();
 
   const formData = new FormData(form);
-  const objData = Object.fromEntries(formData);
-  const message = formatMessage(objData);
-  window.open('http://wa.me/6285758438583?text=' + encodeURIComponent(message));
+  // const objData = Object.fromEntries(formData);
+  // const message = formatMessage(objData);
+  // window.open('http://wa.me/6285758438583?text=' + encodeURIComponent(message));
+  
+  // get Transaction Token
+  try {
+    const response = await fetch('/php/placeOrder.php', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const token = await response.text();
+    window.snap.pay(token, {
+      onSuccess: function(result){
+        /* You may add your own implementation here */
+        alert("payment success!"); console.log(result);
+      },
+      onPending: function(result){
+        /* You may add your own implementation here */
+        alert("wating your payment!"); console.log(result);
+      },
+      onError: function(result){
+        /* You may add your own implementation here */
+        alert("payment failed!"); console.log(result);
+      },
+      onClose: function(){
+        /* You may add your own implementation here */
+        alert('you closed the popup without finishing the payment');
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+  }  
 });
 
 function formatMessage(obj) {

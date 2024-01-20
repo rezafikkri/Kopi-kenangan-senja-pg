@@ -176,4 +176,9 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
+### Composer ###
+composer.phar
+/vendor/
+
+
 # End of https://www.toptal.com/developers/gitignore/api/node,vim,linux
