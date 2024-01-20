@@ -65,3 +65,43 @@ const rupiah = (number) => {
     minimumFractionDigits: 0
   }).format(number);
 };
+
+// form validation
+const checkoutButton = document.querySelector('#checkout-button');
+checkoutButton.disabled = true;
+
+const form = document.querySelector('#checkout-form');
+form.addEventListener('keyup', () => {
+  for (const el of form.elements) {
+    if (el.id != 'checkout-button' && el.value.length === 0) {
+      checkoutButton.classList.add('disabled');
+      checkoutButton.disabled = true;
+      return false;
+    }
+  }
+
+  checkoutButton.disabled = false;
+  checkoutButton.classList.remove('disabled');
+});
+
+// checkout
+checkoutButton.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(form);
+  const objData = Object.fromEntries(formData);
+  const message = formatMessage(objData);
+  window.open('http://wa.me/6285758438583?text=' + encodeURIComponent(message));
+});
+
+function formatMessage(obj) {
+  return `*Data Customer*
+    Nama: ${obj.name}
+    Email: ${obj.email}
+    No HP: ${obj.phone}\n
+*Data Pesanan*
+    ${JSON.parse(obj.items).map((p,i) => `${i+1}. ${p.name} (${p.quantity} x ${rupiah(p.price)})`).join('\n    ')}
+\n*TOTAL*: ${rupiah(obj.total)}
+Terimakasih.
+  `;
+}
